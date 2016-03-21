@@ -6,7 +6,7 @@ from PIL import Image
 from tempfile import TemporaryFile
 import pdb
 
-from functions import find_max_length, find_intersection
+from functions import find_max_length, find_intersection, rank_vanishing_points, vote_value
 
 ########################################
 #In this section, we detect the edges of the image using Probablistic houghtransform. 
@@ -37,7 +37,22 @@ maxlength, i_arg = find_max_length(line)
 
 intersection, intersection_valid, intersection_invalid = find_intersection(line)
 
+#for i in range(len(intersection_valid)):
+#	print intersection_valid[i]
 
+###### voting of the detected intersection points ######
+vote = rank_vanishing_points(intersection_valid, line)
+
+points_sel = []
+for j in range(len(vote)):
+	i = vote[j]
+	if(not(not(i>3) and not(i<3))):
+		points_sel.append(intersection_valid[j])
+		print i
+
+
+for i in range(len(vote)):
+	print vote[i]
 '''
 N = np.shape(intersection_valid);
 w_1 = 0.10; 
@@ -236,4 +251,4 @@ y1 = int(line[vote[perp_data_valid[m,2],1],1]);
 x2 = int(line[vote[perp_data_valid[m,2],1],2]);
 y2 = int(line[vote[perp_data_valid[m,2],1],3]);
 cv2.line(img,(x1,y1),(x2,y2),(0,255,0),2)
-cv2.imwrite('houghlines_new_perp.jpg',img)
+cv2.imwrite('houghlines_new_perp.jpg',img)'''
