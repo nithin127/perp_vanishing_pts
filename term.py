@@ -54,7 +54,7 @@ image_dir = 'groundtruth/Images/0000000041.jpg'
 img1 = cv2.imread(image_dir)
 for i in range(len(intersection_valid)):
 	if (intersection_valid[i][2]!=float("inf")):
-		cv2.circle(img1,(int(intersection_valid[i][2]),int(intersection_valid[i][3])),10,(100,50,50),-1)
+		cv2.circle(img1,(int(intersection_valid[i][2]),int(intersection_valid[i][2])),10,(100,50,50),-1)
 		ll1 = intersection_valid[i][0]
 		ll2 = intersection_valid[i][1]
 		cv2.line(img1,(int(other_line[ll1][0][0]),int(other_line[ll1][0][1])),(int(other_line[ll1][0][2]),int(other_line[ll1][0][3])),(0,255,0),2)
