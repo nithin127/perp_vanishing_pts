@@ -86,12 +86,12 @@ cv2.imwrite('_ch_'+image_dir[-6:],img1)
 #lets complete the lines
 m_con = (other_line[i][0][3]-other_line[i][0][1])/(other_line[i][0][2]-other_line[i][0][0])
 m_pro = (other_line[j][0][3]-other_line[j][0][1])/(other_line[j][0][2]-other_line[j][0][0])
-for g in np.linspace(0,666,20):
+for g in np.linspace(0,666,50):
 	y_con = other_line[i][0][1]+(m_con)*(g-other_line[i][0][0])
 	y_pro = other_line[j][0][1]+(m_pro)*(g-other_line[j][0][0])
 	#print g,y_con,y_pro
-	cv2.circle(img1,(int(g),int(y_con)),3,(0,255,0),-1)
-	cv2.circle(img1,(int(g),int(y_pro)),3,(0,255,0),-1)
+	cv2.circle(img1,(int(g),int(y_con)),1,(0,255,0),-1)
+	cv2.circle(img1,(int(g),int(y_pro)),1,(0,255,0),-1)
 
 cv2.imwrite('_'+image_dir[-6:],img1)
 
@@ -107,7 +107,7 @@ def line_intersection(line1, line2):
 	    return a[0] * b[1] - a[1] * b[0]
 	div = det(xdiff, ydiff)
 	if div == 0:
-	   raise Exception('lines do not intersect')
+	   return float("inf"),float("inf")
 	d = (det(*line1), det(*line2))
 	x = det(d, xdiff) / div
 	y = det(d, ydiff) / div

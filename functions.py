@@ -137,6 +137,23 @@ def rank_vanishing_points(intersection_valid, line):
 		vote.append(vote_iter)
 	return vote
 
+def line_intersection(line1, line2):
+	pro = line1
+	con = line2
+	line1 = [pro[0:2],pro[2:4]]
+	line2 = [con[0:2],con[2:4]]
+	xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
+	ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1]) #Typo was here
+	def det(a, b):
+	    return a[0] * b[1] - a[1] * b[0]
+	div = det(xdiff, ydiff)
+	if div == 0:
+	   raise Exception('lines do not intersect')
+	d = (det(*line1), det(*line2))
+	x = det(d, xdiff) / div
+	y = det(d, ydiff) / div
+	return x, y
+
 def find_intersection2(line):
 	zero_slope = []
 	inf_slope=[]

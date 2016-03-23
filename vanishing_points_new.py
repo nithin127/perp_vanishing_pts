@@ -6,7 +6,8 @@ from PIL import Image
 from tempfile import TemporaryFile
 import pdb
 
-from functions import find_max_length, find_intersection, rank_vanishing_points, vote_value, in_lineseg,find_intersection2
+from functions import find_max_length, find_intersection, rank_vanishing_points
+from functions import vote_value, find_intersection2, line_intersection
 
 ########################################
 #In this section, we detect the edges of the image using Probablistic houghtransform. 
@@ -31,7 +32,7 @@ img_hough = img
 
 ###### intersection detection ######
 
-intersection, intersection_valid, intersection_invalid = find_intersection2(line)
+#intersection, intersection_valid, intersection_invalid = find_intersection2(line)
 
 #for i in range(len(intersection_valid)):
 #	print intersection_valid[i]
