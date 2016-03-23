@@ -35,8 +35,7 @@ def in_lineseg(line,x,y):
 		return False
 	else: return True
 
-
-def find_intersection(line):
+def find_intersections(line):
 	intersection = []
 	intersection_valid = []
 	intersection_invalid = []
@@ -148,55 +147,60 @@ def line_intersection(line1, line2):
 	    return a[0] * b[1] - a[1] * b[0]
 	div = det(xdiff, ydiff)
 	if div == 0:
-	   raise Exception('lines do not intersect')
+	   return float("inf"), float("inf")
 	d = (det(*line1), det(*line2))
 	x = det(d, xdiff) / div
 	y = det(d, ydiff) / div
 	return x, y
 
-def find_intersection2(line):
+def find_intersections2(line):
 	zero_slope = []
 	inf_slope=[]
 	other_line=[]
+	image_dir = 'groundtruth/Images/0000000041.jpg'
 
 	for i in range(line.shape[0]):
-		if (line[i][0][3]-line[i][0][1] == 0):
-			#print line[i][0] , 'zero_slope'
+		if (line[i][0][3]-line[i][0][1] == 0):	
 			zero_slope.append((line[i],i))
 			cv2.line(img,(int(line[i][0][0]),int(line[i][0][1])),(int(line[i][0][2]),int(line[i][0][3])),(255,0,0),2)
 
 	for i in range(line.shape[0]):
-		if (line[i][0][2]-line[i][0][0] == 0):
-			#print line[i][0] , 'inf_slope'
+		if (line[i][0][2]-line[i][0][0] == 0):		
 			inf_slope.append((line[i],i))
 			cv2.line(img,(int(line[i][0][0]),int(line[i][0][1])),(int(line[i][0][2]),int(line[i][0][3])),(0,0,255),2)
 
 	for i in range(line.shape[0]):
 		if not((line[i][0][2]-line[i][0][0] == 0)or(line[i][0][3]-line[i][0][1] == 0)):
-			other_line.append((line[i],i))
-			#print line[i][0], mi
-	
+			other_line.append((line[i],i))		
+
 	intersection = []
 	intersection_valid = []
 	intersection_invalid = []
-
+	# the list would be appended in the following format:
+	# [line1, line2, x_intersection, y_intersection]
+		
 	for i in range(len(other_line)):
-		mi = (other_line[i][0][3]-other_line[i][0][1])/(other_line[i][0][2]-other_line[i][0][0])
 		for j in range(i+1,len(other_line)):
-			##
-			#checking if any of the slopes are infinity
-			##
-			mj = (other_line[j][0][3]-other_line[j][0][1])/(other_line[j][0][2]-other_line[j][0][0])	
-			if (mi==mj):
-				intersection.append([i,j,float("inf"),float("inf"),1])
-				intersection_valid.append([i,j,float("inf"),float("inf"),1])
+			#checking if the lines intersect at all	
+			#finding the points of intersection
+			p_x,p_y = line_intersection(other_line[j][0][0],other_line[i][0][0])
+			if (p_x == float("inf")):
+				intersection.append([other_line[i][1],other_line[j][1],float("inf"),float("inf")])
+				intersection_valid.append([other_line[i][1],other_line[j][1],float("inf"),float("inf")])
 			else:
-				p_x = (other_line[j][0][1]-other_line[i][0][1] + mi*other_line[i][0][0] - mj*other_line[j][0][0])/(mi-mj)
-				p_y = other_line[j][0][1]+ mj*(p_x-other_line[j][0][0])
-				if (in_lineseg(other_line[i][0],p_x,p_y) or (in_lineseg(other_line[j][0],p_x,p_y))):
-					intersection.append([i,j,p_x,p_y,0])
-					intersection_invalid.append([i,j,p_x,p_y,0])
+				if (in_lineseg(other_line[i][0][0],p_x,p_y) or in_lineseg(other_line[j][0][0],p_x,p_y)):
+					intersection.append([other_line[i][1],other_line[j][1],p_x,p_y])
+					intersection_invalid.append([other_line[i][1],other_line[j][1],p_x,p_y])
 				else: 
-					intersection.append([i,j,p_x,p_y,1])
-					intersection_valid.append([i,j,p_x,p_y,1])
+					intersection.append([other_line[i][1],other_line[j][1],p_x,p_y])
+					intersection_valid.append([other_line[i][1],other_line[j][1],p_x,p_y])
 
+	if (len(inf_slope) >1):
+		intersection.append([zero_slope[0][1],zero_slope[1][1],float("inf"),float("inf")])
+		intersection_valid.append([zero_slope[0][1],zero_slope[1][1],float("inf"),float("inf")])
+
+	if (len(zero_slope) >1):
+		intersection.append([inf_slope[0][1],zero_slope[1][1],float("inf"),float("inf")])
+		intersection_valid.append([inf_slope[0][1],inf_slope[1][1],float("inf"),float("inf")])
+
+	return intersection, intersection_valid, intersection_invalid 		
