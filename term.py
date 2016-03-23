@@ -19,7 +19,7 @@ for i in range(line.shape[0]):
 		other_line.append(line[i])
 		#print line[i][0], mi
 
-cv2.imwrite('houghlines_'+image_dir[-6:],img)
+#cv2.imwrite('houghlines_'+image_dir[-6:],img)
 
 
 # the list would be appended in the following format:
@@ -68,15 +68,15 @@ j = 2
 con = other_line[i][0]
 pro = other_line[j][0]
 img1 = cv2.imread(image_dir)
-cv2.line(img1,(int(other_line[i][0][0]),int(other_line[i][0][1])),(int(other_line[i][0][2]),int(other_line[i][0][3])),(0,255,100),2)
-cv2.line(img1,(int(other_line[j][0][0]),int(other_line[j][0][1])),(int(other_line[j][0][2]),int(other_line[j][0][3])),(0,100,255),2)
+cv2.line(img1,(int(other_line[i][0][0]),int(other_line[i][0][1])),(int(other_line[i][0][2]),int(other_line[i][0][3])),(0,255,100),3)
+cv2.line(img1,(int(other_line[j][0][0]),int(other_line[j][0][1])),(int(other_line[j][0][2]),int(other_line[j][0][3])),(0,100,255),3)
 
 
 m_con = (other_line[i][0][3]-other_line[i][0][1])/(other_line[i][0][2]-other_line[i][0][0])
 m_pro = (other_line[j][0][3]-other_line[j][0][1])/(other_line[j][0][2]-other_line[j][0][0])
 for g in [0,2]:
-	y_con = other_line[i][0][g+1]+(m_con)*(other_line[i][0][g]-other_line[i][0][1])
-	y_pro = other_line[j][0][g+1]+(m_pro)*(other_line[j][0][g]-other_line[j][0][1])
+	y_con = other_line[i][0][1]+(m_con)*(other_line[i][0][g]-other_line[i][0][0])
+	y_pro = other_line[j][0][1]+(m_pro)*(other_line[j][0][g]-other_line[j][0][0])
 	#print g,y_con,y_pro
 	cv2.circle(img1,(int(other_line[i][0][g]),int(y_con)),3,(0,255,0),-1)
 	cv2.circle(img1,(int(other_line[j][0][g]),int(y_pro)),3,(0,0,255),-1)
@@ -86,12 +86,12 @@ cv2.imwrite('_ch_'+image_dir[-6:],img1)
 #lets complete the lines
 m_con = (other_line[i][0][3]-other_line[i][0][1])/(other_line[i][0][2]-other_line[i][0][0])
 m_pro = (other_line[j][0][3]-other_line[j][0][1])/(other_line[j][0][2]-other_line[j][0][0])
-for g in range(666):
-	y_con = other_line[i][0][1]+(m_con)*(g-other_line[i][0][1])
-	y_pro = other_line[j][0][1]+(m_pro)*(g-other_line[j][0][1])
+for g in np.linspace(0,666,20):
+	y_con = other_line[i][0][1]+(m_con)*(g-other_line[i][0][0])
+	y_pro = other_line[j][0][1]+(m_pro)*(g-other_line[j][0][0])
 	#print g,y_con,y_pro
-	cv2.circle(img1,(g,int(y_con)),3,(0,255,0),-1)
-	cv2.circle(img1,(g,int(y_pro)),3,(0,255,0),-1)
+	cv2.circle(img1,(int(g),int(y_con)),3,(0,255,0),-1)
+	cv2.circle(img1,(int(g),int(y_pro)),3,(0,255,0),-1)
 
 cv2.imwrite('_'+image_dir[-6:],img1)
 
