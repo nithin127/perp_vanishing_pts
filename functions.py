@@ -22,7 +22,6 @@ def find_max_length(line):
 		if (mod > maxlength):
 			maxlength = mod ; 
 			i_arg  = i ;
-
 	return maxlength, i_arg;
 
 
@@ -35,58 +34,6 @@ def in_lineseg(line,x,y):
 		return False
 	else: return True
 
-def find_intersections(line):
-	intersection = []
-	intersection_valid = []
-	intersection_invalid = []
-	# the list would be appended in the following format:
-	#	line1, line2, x_intersection, y_intersection, (1==outside the line segment, 2== inside the line segment)
-	for i in range(line.shape[0]):
-		for j in range(i+1,line.shape[0]):
-			##
-			#checking if any of the slopes are infinity
-			##
-			if (line[i][0][2]-line[i][0][0] == 0):
-				mi = float("inf")
-			else: mi = (line[i][0][3]-line[i][0][1])/(line[i][0][2]-line[i][0][0])
-			if (line[j][0][2]-line[j][0][0] == 0):
-				mj = float("inf")
-			else: mj = (line[j][0][3]-line[j][0][1])/(line[j][0][2]-line[j][0][0])
-			##
-			# if one or more of the slopes are infinity, then we must do the following:
-			##
-			if (mi == float("inf")):
-				if (mj == float("inf")):
-					intersection.append([i,j,float("inf"),float("inf"),1])
-					intersection_valid.append([i,j,float("inf"),float("inf"),1])
-				else:
-					p_x = line[i][0][0]
-					p_y = line[j][0][1] + mj*(p_x-line[j][0][0])
-					intersection.append([i,j,p_x,p_y,1])
-					intersection_valid.append([i,j,p_x,p_y,1])
-			elif (mj == float("inf")):
-				p_x = line[j][0][0]
-				p_y = line[i][0][1] + mi*(p_x-line[i][0][0])
-				intersection.append([i,j,p_x,p_y,1])
-				intersection_valid.append([i,j,p_x,p_y,1])
-			##
-			# if none of the slopes are infinity
-			##
-			elif (mi==mj):
-				intersection.append([i,j,float("inf"),float("inf"),1])
-				intersection_valid.append([i,j,float("inf"),float("inf"),1])
-			else:
-				p_x = (line[j][0][1]-line[i][0][1] + mi*line[i][0][0] - mj*line[j][0][0])/(mi-mj)
-				p_y = (mi*line[j][0][1]-mj*line[i][0][1]+mi*mj*(line[i][0][0]-line[j][0][0]))/(mi-mj)
-				if (in_lineseg(line[i][0],p_x,p_y) or (in_lineseg(line[j][0],p_x,p_y))):
-					intersection.append([i,j,p_x,p_y,0])
-					intersection_invalid.append([i,j,p_x,p_y,0])
-				else: 
-					intersection.append([i,j,p_x,p_y,1])
-					intersection_valid.append([i,j,p_x,p_y,1])
-
-	return intersection, intersection_valid, intersection_invalid 
-
 def vote_value(m1,m2,length_t,max_len):
 	#voting strategy to find most likely vanishing point
 	w_1 = 0.10; 
@@ -98,28 +45,37 @@ def vote_value(m1,m2,length_t,max_len):
 	else:
 		th = abs(math.degrees(math.atan((m1-m2)/(1+m1*m2))))
 		x = w_1*(1-th/t) + w_2*(length_t/max_len[0])
-		return x
+		if (x== float("inf"))or(not(x>3) and not(x<3)):
+			return 0.0
+		elif (x<=0):
+			return 0.0
+		else:	
+			return x
 
-def rank_vanishing_points(intersection_valid, line):
+def vote_vanishing_points(intersection_valid, line):
 	max_len = find_max_length(line)
 	vote =[]
 	for point in intersection_valid:
 		vote_iter = float(0)
+		count = 0
 		# If the intersection points is at infinity
 		if (point[2] == float("inf")):
 			pts = line[point[1]][0]
 			if (pts[0]-pts[2] ==0):
 				m = float("inf")
 			else:
-				m = (pts[1]-pts[3])/pts[0]-pts[2]
+				m = (pts[1]-pts[3])/(pts[0]-pts[2])
 			for seg in line:
 				pts_t = seg[0]			
 				if (pts[0]-pts[2] ==0):
 					m_t = float("inf")
 				else:
-					m_t = (pts[1]-pts[3])/pts[0]-pts[2]
+					m_t = (pts[1]-pts[3])/(pts[0]-pts[2])
 				length_t = np.sqrt((pts[1]-pts[3])**2+(pts[0]-pts[2])**2)
-				vote_iter = vote_iter + vote_value(m,m_t,length_t,max_len)
+				vx = vote_value(m,m_t,length_t,max_len)
+				if (vx>0):
+					count = count + 1
+				vote_iter = vote_iter + vx
 			# If the intersection points is not at infinity
 		else:
 			v_x = point[2]
@@ -132,7 +88,12 @@ def rank_vanishing_points(intersection_valid, line):
 					m_t = (pts[1]-pts[3])/pts[0]-pts[2]
 				length_t = np.sqrt((pts[1]-pts[3])**2+(pts[0]-pts[2])**2)
 				m = (0.5*(pts[1]+pts[3])-v_y)/(0.5*(pts[0]-pts[2])-v_x)
-				vote_iter = vote_iter + vote_value(m,m_t,length_t,max_len)
+				vx = vote_value(m,m_t,length_t,max_len)
+				if (vx>0):
+					count = count + 1
+				vote_iter = vote_iter + vx
+		if (count >0):				
+			vote_iter = vote_iter/count
 		vote.append(vote_iter)
 	return vote
 
@@ -153,7 +114,14 @@ def line_intersection(line1, line2):
 	y = det(d, ydiff) / div
 	return x, y
 
-def find_intersections2(line):
+def print_lines(line,img):
+	t = line.shape[0]
+	for num in range(t):
+		x1,y1,x2,y2 = line[num][0]
+		cv2.line(img,(x1,y1),(x2,y2),(0,255,0),2)
+	return img
+
+def find_intersections(line):
 	zero_slope = []
 	inf_slope=[]
 	other_line=[]
@@ -162,13 +130,11 @@ def find_intersections2(line):
 	for i in range(line.shape[0]):
 		if (line[i][0][3]-line[i][0][1] == 0):	
 			zero_slope.append((line[i],i))
-			cv2.line(img,(int(line[i][0][0]),int(line[i][0][1])),(int(line[i][0][2]),int(line[i][0][3])),(255,0,0),2)
-
+			
 	for i in range(line.shape[0]):
 		if (line[i][0][2]-line[i][0][0] == 0):		
 			inf_slope.append((line[i],i))
-			cv2.line(img,(int(line[i][0][0]),int(line[i][0][1])),(int(line[i][0][2]),int(line[i][0][3])),(0,0,255),2)
-
+			
 	for i in range(line.shape[0]):
 		if not((line[i][0][2]-line[i][0][0] == 0)or(line[i][0][3]-line[i][0][1] == 0)):
 			other_line.append((line[i],i))		
@@ -204,3 +170,4 @@ def find_intersections2(line):
 		intersection_valid.append([inf_slope[0][1],inf_slope[1][1],float("inf"),float("inf")])
 
 	return intersection, intersection_valid, intersection_invalid 		
+
