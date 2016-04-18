@@ -30,4 +30,13 @@ hold on
 plot(cross(ind,1),cross(ind,2),'o')
 %}
 
-rank
+% now we vote for each of the interesection points
+
+vote = vote_points(cross,lines);
+[val,num] = max(vote);
+
+%{
+% displaying most voted vanishing point and their lines
+figure(2), hold off, imshow(1/5*grayIm)
+figure(2), hold on, plot(lines(cross(num,3:4),[1 2])', lines(cross(num,3:4),[3 4])')
+%}

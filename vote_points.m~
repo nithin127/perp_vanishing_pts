@@ -1,0 +1,11 @@
+function vote = vote_points(cross,lines)
+% This function returns the vote value of all the intersection points
+vote = zeros(size(cross,1),1);
+sigma
+ind = find(cross(:,5)==1);
+for i = 1:ind    
+    for j = 1:size(lines,1)
+        v = lines(j,6)*exp(
+        vote(ind) = vote(ind) + v;
+    end
+end
