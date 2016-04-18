@@ -21,26 +21,33 @@ figure(1), hold on, plot(lines(:, [1 2])', lines(:, [3 4])')
 
 % let's try to detect the vanishing points using this information
 
-cross = find_intersection(lines);
+intn_pts = find_intersection(lines);
 
 %{
 %plot intersection points
-ind = find((cross(:,2) ~= inf)&(cross(:,5)==1));
+ind = find((intn_pts(:,2) ~= inf)&(intn_pts(:,5)==1));
 hold on
-plot(cross(ind,1),cross(ind,2),'o')
+plot(intn_pts(ind,1),intn_pts(ind,2),'o')
 %}
 
 % now we vote for each of the interesection points
 
-vote = vote_points(cross,lines);
+[vote,vote_matrix] = vote_points(intn_pts,lines);
 [val,num] = sort(vote);
 
 %{
 % displaying most voted vanishing point and their lines
 for i = 1:30
 figure(2), hold off, imshow(1/5*grayIm)
-figure(2), hold on, plot(lines(cross(num(end-i),3:4),[1 2])',...
-    lines(cross(num(end-i),3:4),[3 4])')
+figure(2), hold on, plot(lines(intn_pts(num(end-i),3:4),[1 2])',...
+    lines(intn_pts(num(end-i),3:4),[3 4])')
 pause
 end
 %}
+
+% since we want to ignore the vaninishing point, we'll change it's validity
+% index from 1 to 0;
+vp_1 = num(end);
+intn_pts(num(end),5) = 0;
+
+%[vp_2,vp_3] = find_vpoints(lines,intn_pts,vp_1,vote_matrix);
