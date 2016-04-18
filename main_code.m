@@ -1,4 +1,4 @@
-% This is the main code for the computer project [CS-763], IIT Bombay.
+% This is the main code for the computer vision project [CS763, IIT-B,2016]
 % Developers: Nithin Vasisth, Pulkit Katdare
 % This code mainly follows the paper written by Varsha Hedao: Recovering
 % the spacial layout of Cluttered Rooms 
@@ -33,10 +33,14 @@ plot(cross(ind,1),cross(ind,2),'o')
 % now we vote for each of the interesection points
 
 vote = vote_points(cross,lines);
-[val,num] = max(vote);
+[val,num] = sort(vote);
 
 %{
 % displaying most voted vanishing point and their lines
+for i = 1:30
 figure(2), hold off, imshow(1/5*grayIm)
-figure(2), hold on, plot(lines(cross(num,3:4),[1 2])', lines(cross(num,3:4),[3 4])')
+figure(2), hold on, plot(lines(cross(num(end-i),3:4),[1 2])',...
+    lines(cross(num(end-i),3:4),[3 4])')
+pause
+end
 %}
