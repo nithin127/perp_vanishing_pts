@@ -1,8 +1,8 @@
-function [vp_2,vp_3,suitable_set] = find_vpoints(lines,vp_1,intn_pts,vote_matrix,suitable_set)
+function [vp_2,vp_3] = find_vpoints(lines,vp_1,intn_pts,vote_matrix,size_im)
 % The function takes the most voted vanishing point vp_1 and returns the
 % perpendicular vanishing points
 ind = find(intn_pts(:,5)==1);
-%suitable_set = ones(0.5*size(ind,1)*(size(ind,1)-1),2);
+suitable_set = ones(0.5*size(ind,1)*(size(ind,1)-1),2);
 c_t = 0;
 for i_t = 1:size(ind,1)
     for j_t = i_t:size(ind,1)
@@ -10,8 +10,10 @@ for i_t = 1:size(ind,1)
         % we first check if it satisfies the vanishing line criteria        
         if (vanishing_lines_criteria(i,j,vp_1,lines,intn_pts,vote_matrix))
             % WRITE CODE FROM HERE
-            c_t = c_t +1;
-            suitable_set(c_t,:) = [i,j];            
+            if (orthogonality_criteria(i,j,vp_1,intn_pts,size_im))
+                c_t = c_t +1;
+                suitable_set(c_t,:) = [i,j];            
+            end
         end
     end
 end

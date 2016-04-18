@@ -10,6 +10,7 @@ close all
 image = imread('groundtruth/Images/2884291786_69bec3d738_m.jpg');
 %image = imread('groundtruth/Images/0000000041.jpg');
 grayIm = rgb2gray(image);
+size_im = size(grayIm);
 minLen = 0.025*sqrt(size(image,1)*size(image,2));
 
 lines = APPgetLargeConnectedEdges(grayIm, minLen);
@@ -50,4 +51,4 @@ end
 vp_1 = num(end);
 intn_pts(num(end),5) = 0;
 
-%[vp_2,vp_3] = find_vpoints(lines,intn_pts,vp_1,vote_matrix);
+%[vp_2,vp_3] = find_vpoints(lines,intn_pts,vp_1,vote_matrix,size_im );
