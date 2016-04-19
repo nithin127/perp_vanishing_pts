@@ -75,7 +75,7 @@ function [o,f] = find_ortho_focal_1(i,j,pts,size_im)
 
 m1 = (pts(i,2)-pts(j,2))/(pts(i,1)-pts(j,1)); %slope between i&j
 m2 = -1/m1; %slope of perpendicular from image centre
-c = round(size_im/2);  % position of centre of image
+c = round([size_im/2]);  % position of centre of image
 x = (c(2)-pts(j,2)+m1*pts(j,1)-m2*c(1))/(m1-m2);
 y = m1*(x-pts(j,1))+pts(j,2);
 p = [x,y];
@@ -91,22 +91,18 @@ function res = check_ortho_focal(o,f,size_im,res)
 % This function returns the logical AND of initial value of res and the
 % value computed in this function. The value computed is true if the values
 % of 'o' and 'f' are within reasonable limits
-
-% define threshold values
 f_thres_h = inf;
 f_thres_l = 0;
-o_limit = inf;
-
-res_x = true;
+o_thres_h = [inf,inf];
+o_thres_l = [0,0];
+res = true;
 if (f ~= inf)
     if ~(f>=f_thres_l && f<=f_thres_h)
-        res_x = false;
+        res = false;
     end
 end
-chck_o = o>= (round(size_im/2)-o_limit)& o<=(round(size_im/2)+o_limit);
-% to make sure that it is within a o_limit distance from the centre
-if ~(chck_o(1)&&chck_o(2))
-    res_x = false;
+if ~(o>= o_thres_l && o<=o_thres_h)
+    res = false;
 end
-res = res && res_x;
+
 end
