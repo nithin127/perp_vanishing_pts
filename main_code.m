@@ -68,9 +68,26 @@ intn_pts((ismember(intn_pts(:,3),vp_1_lines)|...
 [suitable_set,o,f] = find_vpoints(lines,vp_1,intn_pts,vote_matrix,size_im,grayIm);
 
 %{
+
 value_set = vote(suitable_set(:,1))+vote(suitable_set(:,2));
-[~,ind_s] = max(value_set);
-vp_2 = suitable_set(ind_s,1);
-vp_3 = suitable_set(ind_s,2);
+[~,ind_s] = sort(value_set);
+for i = 0:30
+    vp_2 = suitable_set(ind_s(end-i),1);
+    vp_3 = suitable_set(ind_s(end-i),2);
+
+    x = [intn_pts([vp_1,vp_2,vp_3],1),intn_pts([vp_1,vp_2,vp_3],2)];
+    figure(3), hold off, imshow(grayIm)
+    figure(3), hold on, plot(lines(intn_pts(vp_1,3:4),[1 2])',...
+        lines(intn_pts(vp_1,3:4),[3 4])','r')
+    figure(3), hold on, plot(lines(intn_pts(vp_2,3:4),[1 2])',...
+        lines(intn_pts(vp_2,3:4),[3 4])','b')
+    figure(3), hold on, plot(lines(intn_pts(vp_3,3:4),[1 2])',...
+        lines(intn_pts(vp_3,3:4),[3 4])','g')
+    hold on, plot(intn_pts(vp_1,1),intn_pts(vp_1,2),'ro')
+    hold on, plot(intn_pts(vp_2,1),intn_pts(vp_2,2),'bo')
+    hold on, plot(intn_pts(vp_3,1),intn_pts(vp_3,2),'go')
+    axis([min(0,min(x(:,1))) max(x(:,1)) min(0,min(x(:,2))) max(x(:,2))])
+    pause
+end
 %}
 
