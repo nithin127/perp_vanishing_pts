@@ -36,7 +36,7 @@ plot(intn_pts(ind,1),intn_pts(ind,2),'o')
 [vote,vote_matrix] = vote_points(intn_pts,lines);
 [val,num] = sort(vote);
 
-%{.
+%{
 % displaying most voted vanishing point and their lines
 for i = 1:30
 figure(2), hold off, imshow(1/5*grayIm)
@@ -51,4 +51,4 @@ end
 vp_1 = num(end);
 intn_pts(num(end),5) = 0;
 
-%[vp_2,vp_3] = find_vpoints(lines,intn_pts,vp_1,vote_matrix,size_im );
+[vp_2,vp_3,o,f] = find_vpoints(lines,vp_1,intn_pts,vote_matrix,size_im );
