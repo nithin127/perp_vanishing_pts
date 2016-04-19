@@ -50,9 +50,6 @@ elseif (intn_pts(i,2)==inf || intn_pts(j,2)==inf)
     else 
         x_inf = j; x_fin = i;
     end
-    % Now let's estimate the angle and distance of each common line segment
-    % from the vanishing line
-    m_line = lines(x_inf,5);
+    % Now let's estimate the angle and distance of each line segment 
 else
-end
 end

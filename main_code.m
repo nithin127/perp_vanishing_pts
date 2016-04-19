@@ -14,9 +14,6 @@ size_im = size(grayIm);
 minLen = 0.025*sqrt(size(image,1)*size(image,2));
 
 lines = APPgetLargeConnectedEdges(grayIm, minLen);
-% Let's add another column of ones to account for validity of lines, we
-% will assign these to be zeros when we no longer want to consider them
-lines = [lines, ones(size(lines,1),1)];
 
 %{
 % displaying image
@@ -54,18 +51,16 @@ end
 % index from 1 to 0;
 vp_1 = num(end);
 intn_pts(num(end),5) = 0;
-% Also let's remove all the lines voting for the vanishing point by
-% changing their validity to zero
 vp_1_lines = vote_matrix{num(end)}{2};
-lines(vp_1_lines,7) = 0;
+
 % Let's also remove the validity of all the points who have been formed by
 % the intersection of the vp_1_lines
 
 intn_pts((ismember(intn_pts(:,3),vp_1_lines)|...
     ismember(intn_pts(:,3),vp_1_lines)),5) = 0;
 
-
-[suitable_set,o,f] = find_vpoints(lines,vp_1,intn_pts,vote_matrix,size_im,grayIm);
+[~,num1] = max(vote(intn_pts(:,5)==1));
+%[suitable_set,o,f] = find_vpoints(lines,vp_1,intn_pts,vote_matrix,size_im,grayIm);
 
 %{
 
@@ -86,7 +81,8 @@ for i = 0:30
     hold on, plot(intn_pts(vp_1,1),intn_pts(vp_1,2),'ro')
     hold on, plot(intn_pts(vp_2,1),intn_pts(vp_2,2),'bo')
     hold on, plot(intn_pts(vp_3,1),intn_pts(vp_3,2),'go')
-    axis([min(0,min(x(:,1))) max(x(:,1)) min(0,min(x(:,2))) max(x(:,2))])
+    axis([min(0,min(x(:,1))) max(size_im(1),max(x(:,1))) ...
+        min(0,min(x(:,2))) max(size_im(2),max(x(:,2)))])
     pause
 end
 %}
