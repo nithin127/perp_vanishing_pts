@@ -1,4 +1,4 @@
-% This is the main code for the computer vision project [CS763, IIT-B,2016]
+% This is the code for the computer vision project [CS763, IIT-B,2016]
 % Developers: Nithin Vasisth, Pulkit Katdare
 % This code mainly follows the paper written by Varsha Hedao: Recovering
 % the spacial layout of Cluttered Rooms 
@@ -14,6 +14,10 @@ size_im = size(grayIm);
 minLen = 0.025*sqrt(size(image,1)*size(image,2));
 
 lines = APPgetLargeConnectedEdges(grayIm, minLen);
+% Let's add another column of ones to account for validity of lines, we
+% will assign these to be zeros when we no longer want to consider them
+lines = [lines, ones(size(lines,1),1)];
+
 %{
 % displaying image
 figure(1), hold off, imshow(grayIm)
@@ -37,7 +41,7 @@ plot(intn_pts(ind,1),intn_pts(ind,2),'o')
 [val,num] = sort(vote);
 
 %{
-% displaying most voted vanishing point and their lines
+% displaying most voted points and their lines
 for i = 1:30
 figure(2), hold off, imshow(1/5*grayIm)
 figure(2), hold on, plot(lines(intn_pts(num(end-i),3:4),[1 2])',...
@@ -46,9 +50,27 @@ pause
 end
 %}
 
-% since we want to ignore the vaninishing point, we'll change it's validity
+% since we want to ignore the vanishing point, we'll change it's validity
 % index from 1 to 0;
 vp_1 = num(end);
 intn_pts(num(end),5) = 0;
+% Also let's remove all the lines voting for the vanishing point by
+% changing their validity to zero
+vp_1_lines = vote_matrix{num(end)}{2};
+lines(vp_1_lines,7) = 0;
+% Let's also remove the validity of all the points who have been formed by
+% the intersection of the vp_1_lines
 
-[vp_2,vp_3,o,f] = find_vpoints(lines,vp_1,intn_pts,vote_matrix,size_im );
+intn_pts((ismember(intn_pts(:,3),vp_1_lines)|...
+    ismember(intn_pts(:,3),vp_1_lines)),5) = 0;
+
+
+[suitable_set,o,f] = find_vpoints(lines,vp_1,intn_pts,vote_matrix,size_im,grayIm);
+
+%{
+value_set = vote(suitable_set(:,1))+vote(suitable_set(:,2));
+[~,ind_s] = max(value_set);
+vp_2 = suitable_set(ind_s,1);
+vp_3 = suitable_set(ind_s,2);
+%}
+

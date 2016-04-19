@@ -23,7 +23,7 @@ elseif(n==0)
 elseif(n==1)
     ind_finite = find(list(:,2) ~= 1);
     ind_inf = find(list(:,2) == 1);
-    % inputs only the finite indices into the function
+    % separated the vanishing points as finite and infinite
     [o,f,res] = find_ortho_focal_1(ind_finite(1),ind_finite(2),ind_inf...
         ,pts,size_im,lines);
 else
@@ -32,7 +32,7 @@ else
     [res] = find_ortho_focal_2(ind_inf(1),ind_inf(2),pts,lines);
 end
 
-% check if the determined values of o, f are feasible
+% check if the determined values of o, f are feasible: camera constraints
 res = check_ortho_focal(o,f,size_im,res);
 end
 
@@ -102,7 +102,7 @@ o = p;
 % perpendicular to m1
 mx = tan(lines(pts(k,3),5));
 check = mx*m1+1;
-% Impose tighter condition, if analysis fails
+% To do: Impose tighter condition, if analysis fails
 if (abs(check)>1e-2)
     res = false;
 else
@@ -114,7 +114,7 @@ function [res] = find_ortho_focal_2(i,j,pts,lines)
 mx = tan(lines(pts(i,3),5));
 my = tan(lines(pts(j,3),5));
 check = mx*my+1;
-if (abs(check)>1e-2)
+if (abs(check)>1e-5)
     res = false;
 else
     res = true;
@@ -127,9 +127,9 @@ function res = check_ortho_focal(o,f,size_im,res)
 % of 'o' and 'f' are within reasonable limits
 
 % define threshold values
-f_thres_h = inf;
-f_thres_l = 0;
-o_limit = inf;
+f_thres_h = 1200;
+f_thres_l = 700;
+o_limit = 0.4*sqrt(size_im(1)^2+size_im(2)^2);
 
 res_x = true;
 if (f ~= inf)

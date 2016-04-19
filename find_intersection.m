@@ -5,11 +5,14 @@ function cross = find_intersection(lines)
 %Note the syntax, each row in cross would be as follows
 % [int_x, int_y, line1, line2, valid_point]
 
-n =size(lines,1);
+ind_val = find(lines(:,7) ==1);
+n =size(ind_val,1);
 cross = zeros(n*(n-1)/2,5);
 count = 0;
-for i = 1:n
-    for j = i:n
+for i_t = 1:n
+    for j_t = i_t+1:n
+        i = ind_val(i_t);
+        j = ind_val(j_t);
         count = count +1;
         if (lines(i,5) == lines(j,5))
             cross(count,:) = [inf,inf,i,j,1];
