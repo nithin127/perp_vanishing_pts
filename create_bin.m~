@@ -1,7 +1,0 @@
-function bin = create_bin(intn_pts,size_im)
-[~, sort_ind] = sort(sqrt((intn_pts(:,1)-size_im(1))^2+ intn_pts(:,2)-size_im(2)));
-sort_list = intn_pts(sort_ind,:);
-
-% Let us use the following approach to creating bins, all the points at
-% infinity should individually oppseparate bins
-end
