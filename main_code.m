@@ -2,7 +2,7 @@
 % Developers: Nithin Vasisth, Pulkit Katdare
 % This code mainly follows the paper written by Varsha Hedao: Recovering
 % the spacial layout of Cluttered Rooms 
-%"http://vision.cs.uiuc.edu/~vhedau2/Research/research_spatialLayout.html"
+% "http://vision.cs.uiuc.edu/~vhedau2/Research/research_spatialLayout.html"
 
 clear;
 close all
@@ -14,6 +14,9 @@ size_im = size(grayIm);
 minLen = 0.025*sqrt(size(image,1)*size(image,2));
 
 lines = APPgetLargeConnectedEdges(grayIm, minLen);
+% Adding a column to indicate the validity of the detected lines
+% 1 == valid, 0 == invalid
+lines = [lines , ones(size(lines,1),1)];
 
 %{
 % displaying image
@@ -21,8 +24,7 @@ figure(1), hold off, imshow(grayIm)
 figure(1), hold on, plot(lines(:, [1 2])', lines(:, [3 4])')
 %}
 
-% let's try to detect the vanishing points using this information
-
+% Detecting the vanishing points
 intn_pts = find_intersection(lines);
 
 %{
@@ -32,8 +34,7 @@ hold on
 plot(intn_pts(ind,1),intn_pts(ind,2),'o')
 %}
 
-% now we vote for each of the interesection points
-
+% Voting for each of the interesection points
 [vote,vote_matrix] = vote_points(intn_pts,lines);
 [val,num] = sort(vote);
 
@@ -47,11 +48,13 @@ pause
 end
 %}
 
-% since we want to ignore the vanishing point, we'll change it's validity
-% index from 1 to 0;
+
+% Since we want to ignore the vanishing point, we'll change it's validity
+% index from 1 to 0; Also we'll invalidate the lines voting for it
 vp_1 = num(end);
 intn_pts(num(end),5) = 0;
 vp_1_lines = vote_matrix{num(end)}{2};
+lines(vp_1_lines,7) = 0;
 
 % Let's also remove the validity of all the points who have been formed by
 % the intersection of the vp_1_lines
@@ -59,7 +62,12 @@ vp_1_lines = vote_matrix{num(end)}{2};
 intn_pts((ismember(intn_pts(:,3),vp_1_lines)|...
     ismember(intn_pts(:,3),vp_1_lines)),5) = 0;
 
-[~,num1] = max(vote(intn_pts(:,5)==1));
+% Sorting the remaining intersection points according to vote and validity:
+num1 = zeros(size(intn_pts,1),1);
+num1(intn_pts(:,5)==1) = vote(intn_pts(:,5)==1);
+[~,num1] = sort(num1);
+
+
 %[suitable_set,o,f] = find_vpoints(lines,vp_1,intn_pts,vote_matrix,size_im,grayIm);
 
 %{
