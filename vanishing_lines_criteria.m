@@ -34,6 +34,7 @@ function res = check_theshold_vlines(i,j,lines,intn_pts,vote_matrix,a_thres,d_th
 % If either of the points are at Inf, then the criteria is satisied, if 
 % both are at Inf, then the criteria doesn't apply thus we'll return the 
 %min_angle possible.
+
 if (intn_pts(i,2)==inf && intn_pts(j,2)==inf)    
     res = true;
     for s = [i,j]
@@ -65,8 +66,8 @@ elseif (intn_pts(i,2)==inf || intn_pts(j,2)==inf)
         ang_diff = abs(ang_line - lines(l,5));
         m2 = -1/tan(ang_line);
         p_mid = [(l(1)+l(2))/2 , (l(3)+l(4))/2]; %mid-point of line seg
-        x = (p_mid(2)-pts(x_fin,2)+m1*pts(x_fin,1)-m2*p_mid(1)/(m1-m2));
-        y = m1*(x-pts(x_fin,1))+pts(x_fin,2);        
+        x = (p_mid(2)-intn_pts(x_fin,2)+m1*intn_pts(x_fin,1)-m2*p_mid(1)/(m1-m2));
+        y = m1*(x-intn_pts(x_fin,1))+intn_pts(x_fin,2);        
         % here x,y is the foot of the perpendicular from p_mid
         d = sqrt((p_mid(1)-x)^2 + (p_mid(2)-y)^2);
         if(ang_diff>a_thres || d > d_thres)
@@ -76,14 +77,15 @@ elseif (intn_pts(i,2)==inf || intn_pts(j,2)==inf)
     end
 else
     res = true;
-    m1 = (pts(i,2)-pts(j,2))/(pts(i,1)-pts(j,1));
+    m1 = (intn_pts(i,2)-intn_pts(j,2))/(intn_pts(i,1)-intn_pts(j,1));
     com_lines = intersect(vote_matrix{i}{2},vote_matrix{j}{2});
-    for l = com_lines
+    for l_t = 1:size(com_lines,1)
+        l = lines(com_lines(l_t),:);
         ang_diff = abs(atan(m1) - lines(l,5));
         m2 = -1/m1;
         p_mid = [(l(1)+l(2))/2 , (l(3)+l(4))/2]; %mid-point of line seg
-        x = (p_mid(2)-pts(i,2)+m1*pts(i,1)-m2*p_mid(1)/(m1-m2));
-        y = m1*(x-pts(i,1))+pts(i,2);        
+        x = (p_mid(2)-intn_pts(i,2)+m1*intn_pts(i,1)-m2*p_mid(1)/(m1-m2));
+        y = m1*(x-intn_pts(i,1))+intn_pts(i,2);        
         % here x,y is the foot of the perpendicular from p_mid
         d = sqrt((p_mid(1)-x)^2 + (p_mid(2)-y)^2);
         if(ang_diff>a_thres || d > d_thres)

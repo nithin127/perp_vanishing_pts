@@ -1,12 +1,10 @@
-function [suitable_set,o,f] = find_vpoints(lines,vp_1,intn_pts,vote_matrix,size_im,grayIm)
+function [suitable_set,o,f] = find_vpoints(lines,vp_candidates,intn_pts,vote_matrix,size_im,grayIm)
 % The function takes the most voted vanishing point vp_1 and returns the
 % perpendicular vanishing points
 
-% Let us incorporate a condition that of the 3 vanishing that is to be
-% detected, 1 should be inside the figure and 2 should be outside. This is
-% generally true in the case of
+vp_1 = vp_candidates(1);
 
-ind = find(intn_pts(:,5)==1);
+ind = vp_candidates(2:end);
 suitable_set = ones(0.5*size(ind,1)*(size(ind,1)-1),2);
 c_t = 0;
 for i_t = 1:size(ind,1)

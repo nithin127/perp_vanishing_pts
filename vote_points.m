@@ -4,13 +4,23 @@ vote_matrix = cell(size(intn_pts,1),1);
 vote = zeros(size(intn_pts,1),1);
 sigma = 0.1;
 threshold = 1;
+% Let's initialize the vote and vote matrix for the invalid points
+ind = find(intn_pts(:,5)==0);
+for i = 1:size(ind,1)
+    i_t = ind(i);
+    vote_matrix{i_t} = {0,[]};
+end
+
+% Now for the valid points
 ind = find(intn_pts(:,5)==1);
+ind_line = find(lines(:,7)==1);
 for i_t = 1:size(ind,1)    
     i = ind(i_t);
     v_line = zeros(1,size(lines,1)); %pre-allocating for speed :P
     cnt =0;
     v_tot = 0;
-    for j = 1:size(lines,1)
+    for j_t = 1:size(ind_line,1)
+        j = ind_line(j_t);
         if (intn_pts(i,1)==inf)
             ang = intn_pts(i,4);
         else
