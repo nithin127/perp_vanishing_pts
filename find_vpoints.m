@@ -13,8 +13,7 @@ for i_t = 1:size(ind,1)
     for j_t = i_t:size(ind,1)
         i = ind(i_t); j = ind(j_t);
         % we first check if it satisfies the vanishing line criteria        
-        if (vanishing_lines_criteria(i,j,vp_1,lines,intn_pts,vote_matrix,grayIm))
-            % WRITE CODE FROM HERE
+        if (vanishing_lines_criteria(i,j,vp_1,lines,intn_pts,vote_matrix,grayIm))            
             [res,o,f] = orthogonality_criteria(i,j,vp_1,intn_pts,size_im,lines);
             if (res)
                 c_t = c_t +1;
