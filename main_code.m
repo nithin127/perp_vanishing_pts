@@ -81,7 +81,7 @@ while((sum(intn_pts(:,5)==1)>10)&&(numel((unique(vote)))~=1))
     %recomputing the votes of each point
     [vote,vote_matrix] = vote_points(intn_pts,lines);
     
-    %{
+    %{.
     % display the lines voting for the selected point in each iteration
     vp_1 = num(end);
     figure(3), hold off, imshow(1/5*grayIm)
