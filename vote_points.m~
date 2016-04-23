@@ -30,14 +30,11 @@ for i_t = 1:size(ind,1)
         ang = abs(ang - lines(j,5));
         len = sqrt((lines(j,1)-lines(j,2))^2+(lines(j,3)-lines(j,4))^2);
         v = len*exp(-ang/(2*sigma*sigma));          
-        %only counts the votes above a given threshold    
-        cnt = cnt+1;
+        %only counts the votes above a given threshold       
         v_tot = v_tot + v;
-        v_line(1,cnt) = j;
-        v_line(2,cnt) = v;
+        v_line(1,cnt) = j;                    
     end
-    [~,abc] = sort(v_line(2,:),'descend');
-    v_line = v_line(:,abc);
+    v_line = v_line(1:cnt);
     vote(i) = v_tot;
     vote_matrix{i} = {v_tot,v_line};        
 end

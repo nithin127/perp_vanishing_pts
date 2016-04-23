@@ -62,10 +62,8 @@ clc;
 vp_candidates = zeros(size(intn_pts,1),1);
 count_vp = 0;
 
-% let's define a variable 'membership' that would allocate selected no. of 
-% lines to the most voted vanishing point in each iteration
-membership = 5;
-
+% let's define a variable membership that would allocate lines to the
+% mos voted vanishing point
 while((sum(intn_pts(:,5)==1)>10)&&(numel((unique(vote)))~=1))
     
     [~,num] = sort(vote);
@@ -86,7 +84,7 @@ while((sum(intn_pts(:,5)==1)>10)&&(numel((unique(vote)))~=1))
     
     %recomputing the votes of each point
     % We change the threshold at each iteration
-    % threshold = 1/(count_vp^2);
+    threshold = 1/(count_vp^2);
     [vote,vote_matrix] = vote_points(intn_pts,lines,threshold);
     
     %{.
