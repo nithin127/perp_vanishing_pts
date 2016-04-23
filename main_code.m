@@ -40,7 +40,7 @@ plot(intn_pts(ind,1),intn_pts(ind,2),'o')
 [~,num_1] = sort(vote);
 
 % remove points whose vote is zero
-intn_pts(vote==0,5)=0;
+%intn_pts(vote==0,5)=0;
 
  %{
     % displaying most voted points and their lines
