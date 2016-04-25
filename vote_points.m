@@ -29,13 +29,13 @@ for i_t = 1:size(ind,1)
         % computing the absolute value of the angle difference
         ang = abs(ang - lines(j,5));
         len = sqrt((lines(j,1)-lines(j,2))^2+(lines(j,3)-lines(j,4))^2);
-        v = len*exp(-ang/(2*sigma*sigma));          
-        %only counts the votes above a given threshold    
+        v = len*exp(-ang/(2*sigma*sigma));                   
         cnt = cnt+1;
         v_tot = v_tot + v;
         v_line(1,cnt) = j;
         v_line(2,cnt) = v;
     end
+    v_line = v_line(:,1:cnt);
     [~,abc] = sort(v_line(2,:),'descend');
     v_line = v_line(:,abc);
     vote(i) = v_tot;

@@ -8,7 +8,7 @@ ind = vp_candidates(2:end);
 suitable_set = ones(0.5*size(ind,1)*(size(ind,1)-1),2);
 c_t = 0;
 for i_t = 1:size(ind,1)
-    for j_t = i_t:size(ind,1)
+    for j_t = i_t+1:size(ind,1)
         i = ind(i_t); j = ind(j_t);
         % we first check if it satisfies the vanishing line criteria        
         if (vanishing_lines_criteria(i,j,vp_1,lines,intn_pts,vote_matrix,grayIm))            
