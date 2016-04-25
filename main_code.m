@@ -7,8 +7,9 @@
 clear;
 close all
 %image = imread('image.jpg');
-image = imread('groundtruth/Images/2884291786_69bec3d738_m.jpg');
+%image = imread('groundtruth/Images/2884291786_69bec3d738_m.jpg');
 %image = imread('groundtruth/Images/bedroom4.jpg');
+image = imread('groundtruth/Images/0000000041.jpg');
 grayIm = rgb2gray(image);
 size_im = size(grayIm);
 minLen = 0.025*sqrt(size(image,1)*size(image,2));
@@ -32,6 +33,7 @@ threshold = 1;
 clc;
 
 %% Staring the iterative loop to create bins
+
 % Here we iteratively remove the most voted points, and the lines voting
 % for it, so that in the end we have a set of most voted points and their
 % membership points
@@ -40,6 +42,7 @@ vp_candidates = zeros(size(intn_pts,1),1); % pre-allocating for speed
 count_vp = 0;
 vote = vote_init;
 vote_matrix = vote_matrix_init;
+vp_membership = cell(1);
 
 while((sum(intn_pts(:,5)==1)>10)&&(numel((unique(vote)))~=1))
     
@@ -47,11 +50,13 @@ while((sum(intn_pts(:,5)==1)>10)&&(numel((unique(vote)))~=1))
 
     % Since we want to ignore the vanishing point, we'll change it's validity
     % index from 1 to 0; Also we'll invalidate the lines voting for it
+    
     count_vp = count_vp +1;
     vp_candidates(count_vp) = num(end);
     intn_pts(num(end),5) = 0;
     vp_lines = determine_membership(num(end),lines,vote_matrix);
     lines(vp_lines,7) = 0;    
+    vp_membership{count_vp} = vp_lines;
     
     % Let's also remove the validity of all the points who have been formed by
     % the intersection of the vp_1_lines
@@ -69,13 +74,14 @@ while((sum(intn_pts(:,5)==1)>10)&&(numel((unique(vote)))~=1))
     figure(3), hold off, imshow(1/5*grayIm)
     figure(3), hold on, plot(lines(vp_lines,[1 2])',...
         lines(vp_lines,[3 4])','r')
+    disp(vp_lines)
     pause
     %}    
 end
 
 vp_candidates = vp_candidates(1:count_vp);
 
-[suitable_set,o,f] = find_vpoints(lines,vp_candidates,intn_pts,vote_matrix_init,size_im,grayIm);
+%[suitable_set,o,f] = find_vpoints(lines,vp_candidates,intn_pts,size_im,grayIm,vp_membership);
 
 
 %We now display the image with all the vanishing points and correspnding lines
