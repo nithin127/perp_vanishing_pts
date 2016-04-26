@@ -81,8 +81,17 @@ end
 
 vp_candidates = vp_candidates(1:count_vp);
 
-[suitable_set,o,f] = find_vpoints(lines,vp_candidates,intn_pts,size_im,grayIm,vp_membership);
+%[suitable_set,o,f] = find_vpoints(lines,vp_candidates,intn_pts,size_im,grayIm,vp_membership);
 
 
-%We now display the image with all the vanishing points and correspnding lines
-display_points([vp_candidates(1),suitable_set(1,:)],intn_pts,lines,grayIm);
+% We now display the image with all the vanishing points and correspnding lines
+%{
+for i = 1:size(suitable_set,1)
+    display_points([vp_candidates(1),suitable_set(i,:)],intn_pts,lines,grayIm);
+    k = waitforbuttonpress;
+    if k==0
+        % i = 5 and 7 are the good ones
+    end
+end
+%}
+

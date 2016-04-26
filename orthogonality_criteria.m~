@@ -57,10 +57,10 @@ p = [x,y];
 
 % Now for the orthocenter
 m1 = (intn_pts(i,2)-intn_pts(k,2))/(intn_pts(i,1)-intn_pts(k,1));%slope between i&k
-m_2 = -1/m1; %slope of perpendicular from j
+m2 = -1/m1; %slope of perpendicular from j
 
-x = (intn_pts(k,2)-intn_pts(j,2)+m_2*intn_pts(j,1)-m2*intn_pts(k,1))/(m_2-m2);
-y = m_2*(x-intn_pts(j,1))+intn_pts(j,2);
+x = (intn_pts(k,2)-intn_pts(j,2)+m1*intn_pts(j,1)-m2*intn_pts(k,1))/(m1-m2);
+y = m1*(x-intn_pts(j,1))+intn_pts(j,2);
 o = [x,y]; % o is the orthocenter of triangle ijk
 
 % Now we use the property that f = sqrt(d1*d2), where d1, and d2 are the
