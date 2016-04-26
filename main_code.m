@@ -68,7 +68,7 @@ while((sum(intn_pts(:,5)==1)>10)&&(numel((unique(vote)))~=1))
     % threshold = 1/(count_vp^2); % We're not using thresholds here
     [vote,vote_matrix] = vote_points(intn_pts,lines,threshold);
     
-    %{.
+    %{
     % display the lines voting for the selected point in each iteration
     vp_1 = num(end);
     figure(3), hold off, imshow(1/5*grayIm)
@@ -81,8 +81,8 @@ end
 
 vp_candidates = vp_candidates(1:count_vp);
 
-%[suitable_set,o,f] = find_vpoints(lines,vp_candidates,intn_pts,size_im,grayIm,vp_membership);
+[suitable_set,o,f] = find_vpoints(lines,vp_candidates,intn_pts,size_im,grayIm,vp_membership);
 
 
 %We now display the image with all the vanishing points and correspnding lines
-%display_points(vp_candidates(1:3),intn_pts,lines,grayIm);
+display_points([vp_candidates(1),suitable_set(1,:)],intn_pts,lines,grayIm);

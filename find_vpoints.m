@@ -1,4 +1,4 @@
-function [suitable_set,o,f] = find_vpoints(lines,vp_candidates,intn_pts,size_im,grayIm,vp_membership)
+function [suitable_set,o,f] = find_vpoints(lines,vp_candidates,intn_pts,size_im,~,vp_membership)
 % The function takes the most voted vanishing point vp_1 and returns the
 % perpendicular vanishing points
 
