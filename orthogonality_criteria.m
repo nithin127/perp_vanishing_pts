@@ -33,7 +33,7 @@ else
 end
 
 % check if the determined values of o, f are feasible: camera constraints
- res = check_ortho_focal(o,f,size_im,res);
+ %res = check_ortho_focal(o,f,size_im,res);
 end
 
 function [o,f,res] = find_ortho_focal_0(i,j,k,intn_pts)

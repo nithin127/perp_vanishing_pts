@@ -1,6 +1,6 @@
 function [suitable_set,o,f] = find_vpoints(lines,vp_candidates,intn_pts,size_im,~,vp_membership)
 % The function takes the most voted vanishing point vp_1 and returns the
-% perpendicular vanishing points
+% index value of the perpendicular vanishing points in vp_candidates
 
 vp_1 = vp_candidates(1);
 
@@ -20,8 +20,8 @@ for i_t = 2:size(ind,1)
             [res,o,f] = orthogonality_criteria(i,j,vp_1,intn_pts,size_im,lines);
             if (res)
                 c_t = c_t +1;
-                suitable_set(c_t,:) = [i,j];
-                disp([i,j])
+                suitable_set(c_t,:) = [i_t,j_t];
+                disp([i_t,j_t])
             end
         end
     end

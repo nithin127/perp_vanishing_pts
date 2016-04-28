@@ -11,12 +11,12 @@ function x = display_points(vp_candidates,intn_pts,lines,grayIm,vp_membership)
     x = [intn_pts([vp_1,vp_2,vp_3],1),intn_pts([vp_1,vp_2,vp_3],2)];
         figure(3), hold off, imshow(1/5*grayIm)
         figure(3), hold on, plot(lines(intn_pts(vp_1,3:4),[1 2])',...
-            lines(intn_pts(vp_1,3:4),[3 4])','r')
+            lines(intn_pts(vp_1,3:4),[3 4])','c')
         figure(3), hold on, plot(lines(intn_pts(vp_2,3:4),[1 2])',...
             lines(intn_pts(vp_2,3:4),[3 4])','b')
         figure(3), hold on, plot(lines(intn_pts(vp_3,3:4),[1 2])',...
             lines(intn_pts(vp_3,3:4),[3 4])','g')
-        hold on, plot(intn_pts(vp_1,1),intn_pts(vp_1,2),'ro')
+        hold on, plot(intn_pts(vp_1,1),intn_pts(vp_1,2),'co')
         hold on, plot(intn_pts(vp_2,1),intn_pts(vp_2,2),'bo')
         hold on, plot(intn_pts(vp_3,1),intn_pts(vp_3,2),'go')
         %axis([min(0,min(x(:,1))) max(size_im(1),max(x(:,1))) ...
