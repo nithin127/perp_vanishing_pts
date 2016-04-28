@@ -15,7 +15,7 @@ count = 0;
 [suitable_set,o,f] = find_vpoints(lines,vp_candidates,intn_pts,size_im,grayIm,vp_membership);
 suitable_set = [ones(1,size(suitable_set,1));suitable_set'];
 check_val = zeros(size(suitable_set,2),1);
-for set = suitable_set;
+for set = suitable_set(:,5);
     count = count+1;
     if (orthogonality_criteria(vp_candidates(set(1)),vp_candidates(set(2))...
             ,vp_candidates(set(3)),intn_pts,size_im,lines)) 
@@ -38,7 +38,7 @@ for set = suitable_set;
         end    
         %}
         
-        %{
+        %{.
         m1 = (intn_pts(i,2)-intn_pts(j,2))/(intn_pts(i,1)-intn_pts(j,1)); %slope between i&j
         m2 = -1/m1; %slope of perpendicular from k
 

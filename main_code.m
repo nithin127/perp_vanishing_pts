@@ -86,13 +86,12 @@ vp_candidates = vp_candidates(1:count_vp);
 
 
 % We now display the image with all the vanishing points and correspnding lines
-%{
+%{.
 for i = 1:size(suitable_set,1)
-    display_points([vp_candidates(1),vp_candidates(suitable_set(i,:))],intn_pts,lines,grayIm);
+    display_points([vp_candidates(1),vp_candidates(suitable_set(i,:))'],intn_pts,lines,grayIm);
     k = waitforbuttonpress;
     if k==0
-        disp(i)
-        % i = 5 and 11 are the good ones, may change with code
+        disp(i)       
     end
 end
 %}
